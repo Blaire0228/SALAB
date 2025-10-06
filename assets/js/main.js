@@ -225,4 +225,33 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+    /**
+   * Fix AOS not triggering for Portfolio & Features sections
+   */
+  window.addEventListener('load', () => {
+    // 確保 AOS 初始化後重新刷新一次
+    AOS.refresh();
+
+    // 若頁面有 isotope 區塊（Portfolio）
+    const portfolioContainer = document.querySelector('.isotope-container');
+    if (portfolioContainer) {
+      imagesLoaded(portfolioContainer, function() {
+        AOS.refresh(); // 等圖片載完再刷新 AOS
+      });
+    }
+
+    // 若頁面有 features 區塊
+    const featuresSection = document.querySelector('#features');
+    if (featuresSection) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            AOS.refresh(); // 當滑到 features 區塊時強制刷新一次
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(featuresSection);
+    }
+  });
+
 })();
